@@ -5,15 +5,8 @@ import sys
 import re
 import argparse
 import imp
+import Module
 
-def getImageName(imagePath):
-    stringList = re.compile('\S+/').findall(imagePath)
-    if len(stringList) > 0:
-        imageName = imagePath.replace(stringList[0],'')
-    stringList = re.compile('\.\S+').findall(imageName)
-    if len(stringList) > 0:
-        imageName = imageName.replace(stringList[0],'')
-    return imageName
 def deleteAnnoationCode(codeString):
     annoationList1 = re.compile('/\*[^(/\*|\*/)]+\*/').findall(codeString)
     for string in annoationList1:
@@ -21,20 +14,12 @@ def deleteAnnoationCode(codeString):
     annoationList2 = re.compile('//.*\n').findall(codeString)
     for string in annoationList2:
         codeString = codeString.replace(string,'')
-        print(string)
     return codeString
 
 imp.reload(sys)
 path = os.getcwd() + "/.." #文件夹目录
-# path = '/Users/liuyudi/pkgame-ios_develop_feature'
 os.chdir(path)
-imageList = []
-fileList = [path]
-for file in fileList:
-    files = os.listdir(file)
-    imageList.extend([file+'/'+thisFile for thisFile in files if ('.imageset' in thisFile) and (not thisFile.startswith('{',0))])
-    dirFileList = [file+'/'+thisFile for thisFile in files if  os.path.isdir(file+'/'+thisFile)]
-    fileList.extend(dirFileList)
+imageList = Module.FileObject.getFile(path,['imageset'])
 codePath = path
 fileList = [codePath]
 jointString = []
@@ -57,14 +42,14 @@ for file in fileList:
                     codeString = deleteAnnoationCode(codeString)
                     connectImage = re.compile('"[^"\n%:=]+%').findall(codeString)
                     jointString.extend(connectImage)
-                    imageList = [thisImage for thisImage in imageList if getImageName(thisImage) not in codeString]
+                    imageList = [thisImage for thisImage in imageList if os.path.splitext(thisImage)[0] not in codeString]
                     codeFile.close()
     dirFileList = [file+'/'+thisFile for thisFile in files if os.path.isdir(file+'/'+thisFile) and not thisFile == 'Pods' and '.' not in thisFile]
     fileList.extend(dirFileList)
 index = len(imageList) - 1
 while (index >= 0):
     thisImage = imageList[index]
-    thisImage = getImageName(thisImage)
+    thisImage = os.path.splitext(thisImage)[0]
     for joint in jointString:
         string = joint[1:-1]
         if thisImage.startswith(string):

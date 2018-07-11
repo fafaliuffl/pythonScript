@@ -18,4 +18,7 @@ def getFile(dicPath,fileExten=[]):
             fileList.extend(allFile)
         else:
             fileList.extend([thisFile for thisFile in allFile if os.path.splitext(thisFile)[1][1:] in fileExten])
-    print('\n===========================================\n\n'+fileList)
+    print('\n===========================================\n\n')
+    print(fileList)
+    print('\n')
+    return fileList
