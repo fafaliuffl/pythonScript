@@ -1,5 +1,5 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# 本脚本需在python3环境下运行
 import os
 import sys
 import re
