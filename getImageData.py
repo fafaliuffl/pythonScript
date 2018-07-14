@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import re
-import Module
+import fileObject
 
 def deleteAnnoationCode(codeString):
     annoationList1 = re.compile('/\*[^(/\*|\*/)]+\*/').findall(codeString)
@@ -15,7 +15,7 @@ def deleteAnnoationCode(codeString):
 
 path = os.getcwd() + "/.." #文件夹目录
 os.chdir(path)
-imageList = Module.FileObject.getFile(path,['imageset'])
+imageList = fileObject.getFile(path,['imageset'])
 codePath = path
 fileList = [codePath]
 jointString = []
@@ -38,7 +38,7 @@ for filePath in fileList:
                     codeString = deleteAnnoationCode(codeString)
                     connectImage = re.compile('"[^"\n%:=]+%').findall(codeString)
                     jointString.extend(connectImage)
-                    imageList = [thisImage for thisImage in imageList if ('"'+os.path.splitext(os.path.basename(thisImage))[0] +'"') not in codeString]
+                    imageList = [thisImage for thisImage in imageList if ('"'+os.path.splitext(os.path.basename(thisImage))[0]+'"') not in codeString and not os.path.splitext(os.path.basename(thisImage))[0].startswith('{')]
                     codeFile.close()
     dirFileList = [filePath+'/'+thisFile for thisFile in files if os.path.isdir(filePath+'/'+thisFile) and not thisFile == 'Pods' and '.' not in thisFile]
     fileList.extend(dirFileList)
