@@ -14,11 +14,7 @@ def getFile(dicPath,fileExten=[]):
         allFile = [path+'/'+thisFile for thisFile in os.listdir(path) if not thisFile.startswith('.')]
         dirList.extend([thisFile for thisFile in allFile if os.path.isdir(thisFile)])
         if len(fileExten) == 0:
-            print(fileExten)
             fileList.extend(allFile)
         else:
             fileList.extend([thisFile for thisFile in allFile if os.path.splitext(thisFile)[1][1:] in fileExten])
-    print('\n===========================================\n\n')
-    print(fileList)
-    print('\n')
     return fileList
